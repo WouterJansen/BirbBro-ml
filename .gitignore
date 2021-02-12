@@ -140,7 +140,7 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
-# Scrapy stuff:
+# Scrapy stuff:a    z
 .scrapy
 
 # Sphinx documentation
