@@ -9,7 +9,7 @@ import utils
 
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-MODEL = "results/model_Transfer_ep=38_acc=0.8200000000000002.pt"
+MODEL = "results/model_Transfer_ep=68_acc=0.825.pt"
 NUM_CLASSES = 200
 IN_DIR_DATA = "data"
 IMAGE_ROWS = 5
@@ -69,7 +69,7 @@ def main_func():
             image = to_pil(images[ii + (jj * IMAGE_ROWS)])
             index = predict_image(image, transforms_test, model, DEVICE)
             sub = fig.add_subplot(IMAGE_ROWS, IMAGE_COLUMNS, ii + (jj * IMAGE_ROWS) + 1)
-            sub.set_title("prediction:" + str(index) + " | truth:" + str(int(labels[ii + (jj * IMAGE_ROWS)])))
+            sub.set_title("prediction:" + str(index) + " \ntruth:" + str(int(labels[ii + (jj * IMAGE_ROWS)])))
             plt.axis('off')
             plt.imshow(image)
     plt.show()

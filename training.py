@@ -150,10 +150,7 @@ def main_func():
         scheduler.step()
 
         # print performance metrics
-        if (epoch == 0) or ((epoch + 1) % 10 == 0):
-            print('Epoch {} |> Train. loss: {:.4f} | Val. loss: {:.4f}'.format(
-                epoch + 1, np.mean(train_loss), np.mean(val_loss))
-            )
+        print('Epoch {} |> Train. loss: {:.4f} | Val. loss: {:.4f}'.format(epoch + 1, np.mean(train_loss), np.mean(val_loss)))
 
     # use the best model snapshot
     model.load_state_dict(torch.load(best_snapshot_path, map_location=DEVICE))
@@ -178,7 +175,7 @@ def main_func():
 
     # save the accuracy
     path_to_logs = f'{OUT_DIR_RESULTS}/logs.csv'
-    utils.og_accuracy(path_to_logs, model_desc, test_accuracy)
+    utils.log_accuracy(path_to_logs, model_desc, test_accuracy)
 
     print('Test accuracy: {:.3f}'.format(test_accuracy))
 

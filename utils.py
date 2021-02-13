@@ -1,6 +1,4 @@
 import os
-import numpy as np
-import torch
 import torchvision as tv
 import torchvision.transforms.functional as TF
 
@@ -42,29 +40,6 @@ def log_accuracy(path_to_csv, desc, acc, sep='\t', newline='\n'):
         csv.write(f'{desc}{sep}{acc}{newline}')
 
 
-def get_filepaths(path_to_data, fileformat='.jpg'):
-    """
-    Ruturns paths to files of the specified format.
-    """
-    filepaths = list()
-    for root, _, finenames in os.walk(path_to_data):
-        for fn in finenames:
-            if fn.endswith(fileformat):
-                filepaths.append(os.path.join(root, fn))
-
-    return filepaths
-
-
-def cleaning_worker(path_to_img):
-    """
-    Verifies whether the image is corrupted.
-    """
-    std = np.std(mpimg.imread(path_to_img))
-    img_ok = not np.isclose(std, 0.0)
-
-    return img_ok, path_to_img
-
-
 def convert_to_float(x):
     return float(x)
 
@@ -80,8 +55,7 @@ class DatasetBirds(tv.datasets.ImageFolder):
                  transform=None,
                  target_transform=None,
                  loader=tv.datasets.folder.default_loader,
-                 train=True,
-                 bboxes=False):
+                 train=True):
 
         img_root = os.path.join(root, 'images')
 
@@ -126,38 +100,9 @@ class DatasetBirds(tv.datasets.ImageFolder):
         self.imgs = self.samples = imgs_to_use
         self.targets = targets_to_use
 
-        if bboxes:
-            # get coordinates of a bounding box
-            path_to_bboxes = os.path.join(root, 'bounding_boxes.txt')
-            bounding_boxes = list()
-            with open(path_to_bboxes, 'r') as in_file:
-                for line in in_file:
-                    idx, x, y, w, h = map(lambda x: float(x), line.strip('\n').split(' '))
-                    if int(idx) in indices_to_use:
-                        bounding_boxes.append((x, y, w, h))
-
-            self.bboxes = bounding_boxes
-        else:
-            self.bboxes = None
-
     def __getitem__(self, index):
         # generate one sample
         sample, target = super(DatasetBirds, self).__getitem__(index)
-
-        if self.bboxes is not None:
-            # squeeze coordinates of the bounding box to range [0, 1]
-            width, height = sample.width, sample.height
-            x, y, w, h = self.bboxes[index]
-
-            scale_resize = 500 / width
-            scale_resize_crop = scale_resize * (375 / 500)
-
-            x_rel = scale_resize_crop * x / 375
-            y_rel = scale_resize_crop * y / 375
-            w_rel = scale_resize_crop * w / 375
-            h_rel = scale_resize_crop * h / 375
-
-            target = torch.tensor([target, x_rel, y_rel, w_rel, h_rel])
 
         if self.transform_ is not None:
             sample = self.transform_(sample)
