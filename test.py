@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from torch.autograd import Variable
 import utils
 from PIL import Image
-Image.warnings.simplefilter('error', Image.DecompressionBombWarning)
+Image.MAX_IMAGE_PIXELS = 1000000000
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 MODEL = "results/model_Transfer_ep=68_acc=0.825.pt"

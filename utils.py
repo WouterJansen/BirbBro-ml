@@ -2,7 +2,7 @@ import os
 import torchvision as tv
 import torchvision.transforms.functional as TF
 from PIL import Image
-Image.warnings.simplefilter('error', Image.DecompressionBombWarning)
+Image.MAX_IMAGE_PIXELS = 1000000000
 
 def get_model_desc(pretrained=False, num_classes=200, use_attention=False):
     """
