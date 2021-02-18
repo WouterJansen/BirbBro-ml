@@ -6,11 +6,12 @@ import torchvision as tv
 import matplotlib.pyplot as plt
 from torch.autograd import Variable
 import utils
-
+from PIL import Image
+Image.warnings.simplefilter('error', Image.DecompressionBombWarning)
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 MODEL = "results/model_Transfer_ep=68_acc=0.825.pt"
-NUM_CLASSES = 200
+NUM_CLASSES = 34
 IN_DIR_DATA = "data"
 IMAGE_ROWS = 5
 IMAGE_COLUMNS = 5
@@ -47,7 +48,7 @@ def main_func():
     # transform images
     transforms_test = tv.transforms.Compose([
         max_padding,
-        tv.transforms.CenterCrop((375, 375)),
+        tv.transforms.CenterCrop((500, 500)),
         tv.transforms.ToTensor()
     ])
 

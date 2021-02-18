@@ -1,7 +1,8 @@
 import os
 import torchvision as tv
 import torchvision.transforms.functional as TF
-
+from PIL import Image
+Image.warnings.simplefilter('error', Image.DecompressionBombWarning)
 
 def get_model_desc(pretrained=False, num_classes=200, use_attention=False):
     """
@@ -77,7 +78,7 @@ class DatasetBirds(tv.datasets.ImageFolder):
             for line in in_file:
                 idx, use_train = line.strip('\n').split(' ', 2)
                 if bool(int(use_train)) == self.train:
-                    indices_to_use.append(int(idx))
+                    indices_to_use.append(idx)
 
         # obtain filenames of images
         path_to_index = os.path.join(root, 'images.txt')
@@ -85,7 +86,7 @@ class DatasetBirds(tv.datasets.ImageFolder):
         with open(path_to_index, 'r') as in_file:
             for line in in_file:
                 idx, fn = line.strip('\n').split(' ', 2)
-                if int(idx) in indices_to_use:
+                if idx in indices_to_use:
                     if os.name == 'nt':
                         filenames_to_use.add(os.path.join(img_root, fn.replace("/", "\\")))
                     else:

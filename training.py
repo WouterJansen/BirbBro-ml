@@ -8,7 +8,8 @@ import torch.nn.functional as F
 import torch.nn as nn
 import torchvision as tv
 import utils
-
+from PIL import Image
+Image.warnings.simplefilter('error', Image.DecompressionBombWarning)
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 OUT_DIR_RESULTS = 'results'
@@ -17,7 +18,7 @@ IN_DIR_DATA = "data"
 BATCH_SIZE = 24
 WORKERS = 8
 NUM_EPOCHS = 70
-NUM_CLASSES = 200
+NUM_CLASSES = 34
 
 
 def main_func():
@@ -31,7 +32,7 @@ def main_func():
     transforms_train = tv.transforms.Compose([
         max_padding,
         tv.transforms.RandomOrder([
-            tv.transforms.RandomCrop((375, 375)),
+            tv.transforms.RandomCrop((500, 500)),
             tv.transforms.RandomHorizontalFlip(),
             tv.transforms.RandomVerticalFlip()
         ]),
@@ -40,7 +41,7 @@ def main_func():
     ])
     transforms_eval = tv.transforms.Compose([
         max_padding,
-        tv.transforms.CenterCrop((375, 375)),
+        tv.transforms.CenterCrop((500, 500)),
         tv.transforms.ToTensor(),
         tv.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
