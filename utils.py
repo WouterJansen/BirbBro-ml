@@ -4,6 +4,7 @@ import torchvision.transforms.functional as TF
 from PIL import Image
 Image.MAX_IMAGE_PIXELS = 1000000000
 
+
 def get_model_desc(pretrained=False, num_classes=200, use_attention=False):
     """
     Generates description string.

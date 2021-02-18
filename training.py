@@ -11,6 +11,7 @@ import utils
 from PIL import Image
 Image.MAX_IMAGE_PIXELS = 1000000000
 
+
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 OUT_DIR_RESULTS = 'results'
 RANDOM_SEED = 42
