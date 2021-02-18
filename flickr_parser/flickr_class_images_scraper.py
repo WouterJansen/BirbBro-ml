@@ -99,8 +99,8 @@ def make_images_and_train_split_files(images_file, train_split_file, images_fold
                     _, _, subdir_files = next(os.walk(os.path.join(images_folder, subdir)))
                     random_list = [1] * (int(np.floor(len(subdir_files)/2))) + [0] * (int(len(subdir_files) - np.floor(len(subdir_files)/2)))
                     random.shuffle(random_list)
-                    new_uuid = str(uuid.uuid4())
                     for index, file in enumerate(subdir_files):
+                        new_uuid = str(uuid.uuid4())
                         images_out_file.write(new_uuid + ' ' + os.path.join(os.path.join(images_folder, subdir), file).split("\\", 1)[1].replace("\\", "/") + '\n')
                         train_split_out_file.write(new_uuid + ' ' + str(random_list[index]) + '\n')
 
