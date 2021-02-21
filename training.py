@@ -17,12 +17,13 @@ OUT_DIR_RESULTS = 'results'
 RANDOM_SEED = 42
 IN_DIR_DATA = "data"
 BATCH_SIZE = 24
-WORKERS = 8
-NUM_EPOCHS = 70
+WORKERS = 6
+NUM_EPOCHS = 40
 NUM_CLASSES = 34
+SIZE_IMAGE = 700
 
 
-def main_func():
+def main_func(device, out_dir_results, random_seed, in_dir_data, batch_size, workers, num_epochs, num_classes, size_image):
     # create an output folder
     os.makedirs(OUT_DIR_RESULTS, exist_ok=True)
 
@@ -33,7 +34,7 @@ def main_func():
     transforms_train = tv.transforms.Compose([
         max_padding,
         tv.transforms.RandomOrder([
-            tv.transforms.RandomCrop((500, 500)),
+            tv.transforms.RandomCrop((size_image, size_image)),
             tv.transforms.RandomHorizontalFlip(),
             tv.transforms.RandomVerticalFlip()
         ]),
@@ -42,21 +43,21 @@ def main_func():
     ])
     transforms_eval = tv.transforms.Compose([
         max_padding,
-        tv.transforms.CenterCrop((500, 500)),
+        tv.transforms.CenterCrop((size_image, size_image)),
         tv.transforms.ToTensor(),
         tv.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
     # instantiate dataset objects according to the pre-defined splits
-    ds_train = utils.DatasetBirds(IN_DIR_DATA, transform=transforms_train, train=True)
-    ds_val = utils.DatasetBirds(IN_DIR_DATA, transform=transforms_eval, train=True)
-    ds_test = utils.DatasetBirds(IN_DIR_DATA, transform=transforms_eval, train=False)
+    ds_train = utils.DatasetBirds(in_dir_data, transform=transforms_train, train=True)
+    ds_val = utils.DatasetBirds(in_dir_data, transform=transforms_eval, train=True)
+    ds_test = utils.DatasetBirds(in_dir_data, transform=transforms_eval, train=False)
 
-    splits = skms.StratifiedShuffleSplit(n_splits=1, test_size=0.1, random_state=RANDOM_SEED)
+    splits = skms.StratifiedShuffleSplit(n_splits=1, test_size=0.1, random_state=random_seed)
     idx_train, idx_val = next(splits.split(np.zeros(len(ds_train)), ds_train.targets))
 
     # set hyper-parameters
-    params = {'batch_size': BATCH_SIZE, 'num_workers': WORKERS}
+    params = {'batch_size': batch_size, 'num_workers': workers}
 
     # instantiate data loaders
     train_loader = td.DataLoader(
@@ -71,11 +72,11 @@ def main_func():
     )
     test_loader = td.DataLoader(dataset=ds_test, **params)
 
-    model_desc = utils.get_model_desc(num_classes=NUM_CLASSES, pretrained=True)
+    model_desc = utils.get_model_desc(num_classes=num_classes, pretrained=True)
 
     # instantiate the model
     model = tv.models.resnet50(pretrained=True)
-    model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
+    model.fc = nn.Linear(model.fc.in_features, num_classes)
     model.to(DEVICE)
 
     # instantiate optimizer and scheduler
@@ -87,7 +88,7 @@ def main_func():
     val_acc_avg = list()
     best_val_acc = -1.0
 
-    for epoch in range(NUM_EPOCHS):
+    for epoch in range(num_epochs):
 
         # train the model
         model.train()
@@ -95,8 +96,8 @@ def main_func():
         for batch in train_loader:
             x, y = batch
 
-            x = x.to(DEVICE)
-            y = y.to(DEVICE)
+            x = x.to(device)
+            y = y.to(device)
 
             optimizer.zero_grad()
 
@@ -120,8 +121,8 @@ def main_func():
             for batch in val_loader:
                 x, y = batch
 
-                x = x.to(DEVICE)
-                y = y.to(DEVICE)
+                x = x.to(device)
+                y = y.to(device)
 
                 # predict bird species
                 y_pred = model(x)
@@ -144,7 +145,7 @@ def main_func():
                     os.remove(best_snapshot_path)
 
                 best_val_acc = current_val_acc
-                best_snapshot_path = os.path.join(OUT_DIR_RESULTS, f'model_{model_desc}_ep={epoch}_acc={best_val_acc}.pt')
+                best_snapshot_path = os.path.join(out_dir_results, f'model_{model_desc}_ep={epoch}_acc={best_val_acc}.pt')
 
                 torch.save(model.state_dict(), best_snapshot_path)
 
@@ -155,7 +156,7 @@ def main_func():
         print('Epoch {} |> Train. loss: {:.4f} | Val. loss: {:.4f}'.format(epoch + 1, np.mean(train_loss), np.mean(val_loss)))
 
     # use the best model snapshot
-    model.load_state_dict(torch.load(best_snapshot_path, map_location=DEVICE))
+    model.load_state_dict(torch.load(best_snapshot_path, map_location=device))
 
     # test the model
     true = list()
@@ -164,8 +165,8 @@ def main_func():
         for batch in test_loader:
             x, y = batch
 
-            x = x.to(DEVICE)
-            y = y.to(DEVICE)
+            x = x.to(device)
+            y = y.to(device)
 
             y_pred = model(x)
 
@@ -176,11 +177,11 @@ def main_func():
     test_accuracy = skm.accuracy_score(true, pred)
 
     # save the accuracy
-    path_to_logs = f'{OUT_DIR_RESULTS}/logs.csv'
+    path_to_logs = f'{out_dir_results}/logs.csv'
     utils.log_accuracy(path_to_logs, model_desc, test_accuracy)
 
     print('Test accuracy: {:.3f}'.format(test_accuracy))
 
 
 if __name__ == '__main__':
-    main_func()
+    main_func(DEVICE, OUT_DIR_RESULTS, RANDOM_SEED, IN_DIR_DATA, BATCH_SIZE, WORKERS, NUM_EPOCHS, NUM_CLASSES, SIZE_IMAGE)
