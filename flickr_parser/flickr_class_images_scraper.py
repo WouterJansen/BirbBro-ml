@@ -9,7 +9,7 @@ from PIL import Image
 from flickrapi import FlickrAPI
 
 
-NUMBER_OF_IMAGES = 100
+NUMBER_OF_IMAGES = 200
 SEARCH_TERMS_IN_FILE = "search_queries.txt"
 CLASSES_OUT_FILE = "classes.txt"
 IMAGES_OUT_FILE = "images.txt"
