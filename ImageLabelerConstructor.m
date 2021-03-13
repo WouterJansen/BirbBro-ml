@@ -6,17 +6,18 @@ trainSplitFilename = "train_test_split.txt";
 imagesFolder = "images";
 
 %% load image UUIDs and their location paths
-fid =fopen(dataFolder + "/" + imagesFilename);
-file = textscan(fid,'%s %s','Delimiter',' ');
-fclose(fid);
+
+fileID = fopen(dataFolder + "/" + imagesFilename);
+file = textscan(fileID, '%s %s','Delimiter',' ');
+fclose(fileID);
 imageUUIDs = string(file{1});
 imageLocations = string(file{2});
 
 %% Find the images that require labeling based on the training list
 
-fid =fopen(dataFolder + "/" + trainSplitFilename);
-file = textscan(fid,'%s %s', 'Delimiter', ' ');
-fclose(fid);
+fileID = fopen(dataFolder + "/" + trainSplitFilename);
+file = textscan(fid, '%s %s', 'Delimiter', ' ');
+fclose(fileID);
 imageTrainingUUIDs = string(file{1});
 imageTrainingToggle = ~str2num(cell2mat(file{2}));
 imageTrainingUUIDs(imageTrainingToggle) = [];
