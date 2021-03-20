@@ -20,7 +20,7 @@ BATCH_SIZE = 24
 WORKERS = 6
 NUM_EPOCHS = 40
 NUM_CLASSES = 34
-SIZE_IMAGE = 700
+SIZE_IMAGE = 500
 
 
 def main_func(device, out_dir_results, random_seed, in_dir_data, batch_size, workers, num_epochs, num_classes, size_image):
