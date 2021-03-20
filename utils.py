@@ -114,7 +114,7 @@ class DatasetBirds(tv.datasets.ImageFolder):
         return sample, target
 
 
-def pad(img, fill=0, size_max=700):
+def pad(img, fill=0, size_max=500):
     """
     Pads images to the specified size (height x width).
     Fills up the padded area with value(s) passed to the `fill` parameter.

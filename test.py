@@ -18,7 +18,7 @@ NUM_CLASSES = 34
 IN_DIR_DATA = "data"
 IMAGE_ROWS = 4
 IMAGE_COLUMNS = 4
-SIZE_IMAGE = 700
+SIZE_IMAGE = 375
 
 
 def predict_image(image, transforms, model, device):

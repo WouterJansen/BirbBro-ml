@@ -20,7 +20,7 @@ BATCH_SIZE = 24
 WORKERS = 6
 NUM_EPOCHS = 40
 NUM_CLASSES = 34
-SIZE_IMAGE = 500
+SIZE_IMAGE = 375
 
 
 def main_func(device, out_dir_results, random_seed, in_dir_data, batch_size, workers, num_epochs, num_classes, size_image):
@@ -35,8 +35,7 @@ def main_func(device, out_dir_results, random_seed, in_dir_data, batch_size, wor
         max_padding,
         tv.transforms.RandomOrder([
             tv.transforms.RandomCrop((size_image, size_image)),
-            tv.transforms.RandomHorizontalFlip(),
-            tv.transforms.RandomVerticalFlip()
+            tv.transforms.RandomHorizontalFlip()
         ]),
         tv.transforms.ToTensor(),
         tv.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])

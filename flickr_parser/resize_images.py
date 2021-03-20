@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 IMAGES_FOLDER_IN = "images"
 IMAGES_FOLDER_OUT = "images_resized"
-FINAL_WIDTH = 1600
-FINAL_HEIGHT = 1200
+FINAL_WIDTH = 500
+FINAL_HEIGHT = 500
 
 
 def resize_images(images_folder_in, images_folder_out, final_width, final_height):

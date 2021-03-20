@@ -4,7 +4,7 @@ import torchvision as tv
 
 MODEL = "results/model_Transfer_ep=17_acc=0.796875.pt"
 NUM_CLASSES = 34
-SIZE_IMAGE = 700
+SIZE_IMAGE = 375
 
 if __name__ == '__main__':
     # instantiate the model
