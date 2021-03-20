@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 IMAGES_FOLDER_IN = "images"
 IMAGES_FOLDER_OUT = "images_resized"
-FINAL_WIDTH = 1024
-FINAL_HEIGHT = 1024
+FINAL_WIDTH = 1600
+FINAL_HEIGHT = 1200
 
 
 def resize_images(images_folder_in, images_folder_out, final_width, final_height):
@@ -43,6 +43,8 @@ def get_average_sizes(images_folder):
     shapes = [(img.height, img.width) for img, _ in ds]
     heights, widths = [[h for h, _ in shapes], [w for _, w in shapes]]
     print('Average sizes:', *map(np.median, zip(*shapes)))
+    print('Min sizes:', *map(np.min, zip(*shapes)))
+    print('Max sizes:', *map(np.max, zip(*shapes)))
 
     # visualize the distribution of the size of images
     fig = plt.figure()
@@ -55,5 +57,5 @@ def get_average_sizes(images_folder):
 
 
 if __name__ == '__main__':
-    #get_average_sizes(IMAGES_FOLDER)
+    #get_average_sizes(IMAGES_FOLDER_IN)
     resize_images(IMAGES_FOLDER_IN, IMAGES_FOLDER_OUT, FINAL_WIDTH, FINAL_HEIGHT)
