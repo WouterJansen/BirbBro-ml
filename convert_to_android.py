@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision as tv
 
-MODEL = "results/model_Transfer_ep=17_acc=0.796875.pt"
+MODEL = "results/yourmodel.pt"
 NUM_CLASSES = 34
 SIZE_IMAGE = 375
 
@@ -19,4 +19,4 @@ if __name__ == '__main__':
     # convert to TorchScript format
     input_tensor = torch.rand(1, 3, SIZE_IMAGE, SIZE_IMAGE)
     script_model = torch.jit.trace(model, input_tensor)
-    script_model.save("birbronet.pt")
+    script_model.save("birbbroml_net.pt")
