@@ -12,7 +12,7 @@ import os
 
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-MODEL = "results/model_Transfer_ep=17_acc=0.796875.pt"
+MODEL = "results/yourmodel.pt"
 CLASSES_FILE = "classes.txt"
 NUM_CLASSES = 34
 IN_DIR_DATA = "data"
